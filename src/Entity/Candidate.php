@@ -33,6 +33,11 @@ class Candidate
     #[ORM\OneToOne(mappedBy: 'idCandidate', cascade: ['persist', 'remove'])]
     private ?Candidacy $candidacy = null;
 
+    public function __construct()
+    {
+        $this->isValid = false;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

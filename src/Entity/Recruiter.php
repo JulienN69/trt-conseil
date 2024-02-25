@@ -25,6 +25,11 @@ class Recruiter
     #[ORM\OneToOne(inversedBy: 'recruiter', cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
+    public function __construct()
+    {
+        $this->isValid = false;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

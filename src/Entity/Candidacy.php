@@ -22,7 +22,7 @@ class Candidacy
 
     #[ORM\OneToOne(inversedBy: 'candidacy', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?jobOffer $idJobOffer = null;
+    private ?JobOffer $idJobOffer = null;
 
     public function getId(): ?int
     {
