@@ -16,13 +16,11 @@ class Candidacy
     #[ORM\Column]
     private ?bool $isValid = null;
 
-    #[ORM\OneToOne(inversedBy: 'idJobOffer', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Candidate $idCandidate = null;
 
-    #[ORM\OneToOne(inversedBy: 'candidacy', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?JobOffer $idJobOffer = null;
+    public function __construct()
+    {
+        $this->isValid = false;
+    }
 
     public function getId(): ?int
     {
@@ -41,27 +39,4 @@ class Candidacy
         return $this;
     }
 
-    public function getIdCandidate(): ?Candidate
-    {
-        return $this->idCandidate;
-    }
-
-    public function setIdCandidate(Candidate $idCandidate): static
-    {
-        $this->idCandidate = $idCandidate;
-
-        return $this;
-    }
-
-    public function getIdJobOffer(): ?jobOffer
-    {
-        return $this->idJobOffer;
-    }
-
-    public function setIdJobOffer(jobOffer $idJobOffer): static
-    {
-        $this->idJobOffer = $idJobOffer;
-
-        return $this;
-    }
 }

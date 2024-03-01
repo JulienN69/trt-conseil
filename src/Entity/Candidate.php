@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CandidateRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,12 +32,13 @@ class Candidate
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\OneToOne(mappedBy: 'idCandidate', cascade: ['persist', 'remove'])]
-    private ?Candidacy $candidacy = null;
+    #[ORM\ManyToMany(targetEntity: Announcement::class, mappedBy: 'candidate')]
+    private Collection $announcements;   
 
     public function __construct()
     {
         $this->isValid = false;
+        $this->announcements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,20 +106,31 @@ class Candidate
         return $this;
     }
 
-    public function getIdJobOffer(): ?Candidacy
+    /**
+     * @return Collection<int, Announcement>
+     */
+    public function getAnnouncements(): Collection
     {
-        return $this->candidacy;
+        return $this->announcements;
     }
 
-    public function setCandidacy(Candidacy $candidacy): static
+    public function addAnnouncement(Announcement $announcement): static
     {
-        // set the owning side of the relation if necessary
-        if ($candidacy->getIdCandidate() !== $this) {
-            $candidacy->setIdCandidate($this);
+        if (!$this->announcements->contains($announcement)) {
+            $this->announcements->add($announcement);
+            $announcement->addCandidate($this);
         }
-
-        $this->candidacy = $candidacy;
 
         return $this;
     }
+
+    public function removeAnnouncement(Announcement $announcement): static
+    {
+        if ($this->announcements->removeElement($announcement)) {
+            $announcement->removeCandidate($this);
+        }
+
+        return $this;
+    }
+
 }

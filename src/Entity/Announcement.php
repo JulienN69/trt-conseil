@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\JobOfferRepository;
+use App\Repository\AnnouncementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: JobOfferRepository::class)]
-class JobOffer
+#[ORM\Entity(repositoryClass: AnnouncementRepository::class)]
+class Announcement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,8 +28,17 @@ class JobOffer
     #[ORM\Column]
     private ?bool $isValid = null;
 
-    #[ORM\OneToOne(mappedBy: 'idJobOffer', cascade: ['persist', 'remove'])]
-    private ?Candidacy $candidacy = null;
+    #[ORM\ManyToOne(inversedBy: 'announcements')]
+    private ?Recruiter $recruiter = null;
+
+    #[ORM\ManyToMany(targetEntity: Candidate::class, inversedBy: 'announcements')]
+    private Collection $candidate;
+
+    public function __construct()
+    {
+        $this->candidate = new ArrayCollection();
+        $this->isValid = false;
+    }
 
     public function getId(): ?int
     {
@@ -82,19 +93,38 @@ class JobOffer
         return $this;
     }
 
-    public function getCandidacy(): ?Candidacy
+    public function getRecruiter(): ?Recruiter
     {
-        return $this->candidacy;
+        return $this->recruiter;
     }
 
-    public function setCandidacy(Candidacy $candidacy): static
+    public function setRecruiter(?Recruiter $recruiter): static
     {
-        // set the owning side of the relation if necessary
-        if ($candidacy->getIdJobOffer() !== $this) {
-            $candidacy->setIdJobOffer($this);
+        $this->recruiter = $recruiter;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Candidate>
+     */
+    public function getCandidate(): Collection
+    {
+        return $this->candidate;
+    }
+
+    public function addCandidate(Candidate $candidate): static
+    {
+        if (!$this->candidate->contains($candidate)) {
+            $this->candidate->add($candidate);
         }
 
-        $this->candidacy = $candidacy;
+        return $this;
+    }
+
+    public function removeCandidate(Candidate $candidate): static
+    {
+        $this->candidate->removeElement($candidate);
 
         return $this;
     }

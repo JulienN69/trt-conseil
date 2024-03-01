@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RecruiterRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RecruiterRepository::class)]
@@ -25,9 +27,15 @@ class Recruiter
     #[ORM\OneToOne(inversedBy: 'recruiter', cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
+    #[ORM\OneToMany(targetEntity: Announcement::class, mappedBy: 'recruiter')]
+    private Collection $announcements;
+
+    
+
     public function __construct()
     {
         $this->isValid = false;
+        $this->announcements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -82,4 +90,35 @@ class Recruiter
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Announcement>
+     */
+    public function getAnnouncements(): Collection
+    {
+        return $this->announcements;
+    }
+
+    public function addAnnouncement(Announcement $announcement): static
+    {
+        if (!$this->announcements->contains($announcement)) {
+            $this->announcements->add($announcement);
+            $announcement->setRecruiter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnnouncement(Announcement $announcement): static
+    {
+        if ($this->announcements->removeElement($announcement)) {
+            // set the owning side to null (unless already changed)
+            if ($announcement->getRecruiter() === $this) {
+                $announcement->setRecruiter(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
