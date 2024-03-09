@@ -56,7 +56,7 @@
 
         {{ form_row(candidateForm.firstName) }}
         {{ form_row(candidateForm.lastName) }}
-        {{ form_row(candidateForm.curriculumVitae) }}
+        {{ form_row(candidateForm.curriculumVitaeFile) }}
 
         <button type="submit" class="btn btn-primary">Modifier</button>
         {{ form_end(candidateForm) }}
@@ -64,5 +64,7 @@
         </div>
     </div>
 </div>
+
+<img src="{{ vich_uploader_asset( user ) }}">
 
 {% endblock %}

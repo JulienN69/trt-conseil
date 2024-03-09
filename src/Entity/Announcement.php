@@ -31,13 +31,13 @@ class Announcement
     #[ORM\ManyToOne(inversedBy: 'announcements')]
     private ?Recruiter $recruiter = null;
 
-    #[ORM\ManyToMany(targetEntity: Candidate::class, inversedBy: 'announcements')]
-    private Collection $candidate;
+    #[ORM\OneToMany(targetEntity: Candidacy::class, mappedBy: 'announcement')]
+    private Collection $candidacies;
 
     public function __construct()
     {
-        $this->candidate = new ArrayCollection();
         $this->isValid = false;
+        $this->candidacies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -106,25 +106,31 @@ class Announcement
     }
 
     /**
-     * @return Collection<int, Candidate>
+     * @return Collection<int, Candidacy>
      */
-    public function getCandidate(): Collection
+    public function getCandidacies(): Collection
     {
-        return $this->candidate;
+        return $this->candidacies;
     }
 
-    public function addCandidate(Candidate $candidate): static
+    public function addCandidacy(Candidacy $candidacy): static
     {
-        if (!$this->candidate->contains($candidate)) {
-            $this->candidate->add($candidate);
+        if (!$this->candidacies->contains($candidacy)) {
+            $this->candidacies->add($candidacy);
+            $candidacy->setAnnouncement($this);
         }
 
         return $this;
     }
 
-    public function removeCandidate(Candidate $candidate): static
+    public function removeCandidacy(Candidacy $candidacy): static
     {
-        $this->candidate->removeElement($candidate);
+        if ($this->candidacies->removeElement($candidacy)) {
+            // set the owning side to null (unless already changed)
+            if ($candidacy->getAnnouncement() === $this) {
+                $candidacy->setAnnouncement(null);
+            }
+        }
 
         return $this;
     }

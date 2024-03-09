@@ -21,11 +21,11 @@ class AnnouncementType extends AbstractType
             ->add('workPlace', null, [
                 'label' => 'Lieu'
             ])
-            ->add('description')
-            ->add('recruiter', EntityType::class, [
-                'class' => Recruiter::class,
-'choice_label' => 'id',
-            ]);
+            ->add('description');
+            // ->add('recruiter', EntityType::class, [
+            //     'class' => Recruiter::class,
+            //     'choice_label' => 'id',
+            // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

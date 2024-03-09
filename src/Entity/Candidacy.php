@@ -16,6 +16,12 @@ class Candidacy
     #[ORM\Column]
     private ?bool $isValid = null;
 
+    #[ORM\ManyToOne(inversedBy: 'candidacies')]
+    private ?Candidate $candidate = null;
+
+    #[ORM\ManyToOne(inversedBy: 'candidacies')]
+    private ?Announcement $announcement = null;
+
 
     public function __construct()
     {
@@ -35,6 +41,30 @@ class Candidacy
     public function setIsValid(bool $isValid): static
     {
         $this->isValid = $isValid;
+
+        return $this;
+    }
+
+    public function getCandidate(): ?Candidate
+    {
+        return $this->candidate;
+    }
+
+    public function setCandidate(?Candidate $candidate): static
+    {
+        $this->candidate = $candidate;
+
+        return $this;
+    }
+
+    public function getAnnouncement(): ?Announcement
+    {
+        return $this->announcement;
+    }
+
+    public function setAnnouncement(?Announcement $announcement): static
+    {
+        $this->announcement = $announcement;
 
         return $this;
     }

@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\CandidateRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CandidateRepository;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CandidateRepository::class)]
+#[Vich\Uploadable]
 class Candidate
 {
     #[ORM\Id]
@@ -22,8 +25,15 @@ class Candidate
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastName = null;
 
-    #[ORM\Column(type: Types::BLOB, nullable: true)]
-    private $curriculumVitae = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $curriculumVitae = null;
+
+    #[Vich\UploadableField(mapping : 'curriculum_vitae', fileNameProperty: 'curriculumVitae')]
+    #[Assert\Image]
+    private ?File $curriculumVitaeFile = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column]
     private ?bool $isValid = null;
@@ -32,13 +42,13 @@ class Candidate
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToMany(targetEntity: Announcement::class, mappedBy: 'candidate')]
-    private Collection $announcements;   
+    #[ORM\OneToMany(targetEntity: Candidacy::class, mappedBy: 'candidate', cascade: ['remove'])]
+    private Collection $candidacies; 
 
     public function __construct()
     {
         $this->isValid = false;
-        $this->announcements = new ArrayCollection();
+        $this->candidacies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,7 +80,7 @@ class Candidate
         return $this;
     }
 
-    public function getCurriculumVitae()
+    public function getCurriculumVitae(): ?string
     {
         return $this->curriculumVitae;
     }
@@ -106,31 +116,61 @@ class Candidate
         return $this;
     }
 
+
     /**
-     * @return Collection<int, Announcement>
+     * @return Collection<int, Candidacy>
      */
-    public function getAnnouncements(): Collection
+    public function getCandidacies(): Collection
     {
-        return $this->announcements;
+        return $this->candidacies;
     }
 
-    public function addAnnouncement(Announcement $announcement): static
+    public function addCandidacy(Candidacy $candidacy): static
     {
-        if (!$this->announcements->contains($announcement)) {
-            $this->announcements->add($announcement);
-            $announcement->addCandidate($this);
+        if (!$this->candidacies->contains($candidacy)) {
+            $this->candidacies->add($candidacy);
+            $candidacy->setCandidate($this);
         }
 
         return $this;
     }
 
-    public function removeAnnouncement(Announcement $announcement): static
+    public function removeCandidacy(Candidacy $candidacy): static
     {
-        if ($this->announcements->removeElement($announcement)) {
-            $announcement->removeCandidate($this);
+        if ($this->candidacies->removeElement($candidacy)) {
+            // set the owning side to null (unless already changed)
+            if ($candidacy->getCandidate() === $this) {
+                $candidacy->setCandidate(null);
+            }
         }
 
         return $this;
     }
 
+
+    /**
+     * Get the value of curriculumVitaeFile
+     */ 
+    public function getCurriculumVitaeFile(): ?File
+    {
+        return $this->curriculumVitaeFile;
+    }
+
+    /**
+     * Set the value of curriculumVitaeFile
+     *
+     * @return  self
+     */ 
+    public function setCurriculumVitaeFile($curriculumVitaeFile): static
+    {
+        $this->curriculumVitaeFile = $curriculumVitaeFile;
+
+        if (null !== $curriculumVitaeFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Announcement;
 use App\Entity\Candidacy;
+use App\Entity\Candidate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +21,18 @@ class CandidacyRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Candidacy::class);
+    }
+
+    public function create(Announcement $announcement, Candidate $candidate): void
+    {
+        $entityManager = $this->getEntityManager();
+
+        $candidacy = new Candidacy();
+        $candidacy->setAnnouncement($announcement);
+        $candidacy->setCandidate($candidate);
+
+        $entityManager->persist($candidacy);
+        $entityManager->flush();
     }
 
 //    /**

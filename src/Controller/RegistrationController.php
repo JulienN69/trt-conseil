@@ -35,7 +35,7 @@ class RegistrationController extends AbstractController
             $this->addFlash('success', 'votre compte a bien été enregistré, vous recevrez un
              email dès qu\'un de nos consultants l\'a validé' );
 
-            return $this->redirectToRoute('app_register_{id}');
+            return $this->redirectToRoute('app_register');
         }
 
         return $this->render('registration/register.html.twig', [

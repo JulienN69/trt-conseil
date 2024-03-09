@@ -14,24 +14,6 @@
 {{ form_row(AnnouncementForm.jobTitle) }}
 {{ form_row(AnnouncementForm.workPlace) }}
 {{ form_row(AnnouncementForm.description) }}
-{{ form_row(AnnouncementForm.recruiter, {
-    'row_attr': {
-        'class':'d-none'
-    }
-}) }}
-
-
-
-{# {% if is_granted('ROLE_USER') and app.user.recruiter is not null %}
-
-<input type="hidden" value={ app.user.recruiter.id } name="recruiter">
-{% endif %} #}
-
-{# {% if is_granted('ROLE_USER') and app.user.recruiter is not null %} #}
-    {# <input type="hidden" value="{{ app.user.recruiter.id }}" name="job_offer[recruiter]"> #}
-    {# {{ form_row(jobOfferForm.recruiter, {'value': app.user}) }}
-{% endif %} #}
-
 
 <button type="submit" class="btn btn-primary">Valider</button>
 {{ form_end(AnnouncementForm) }}

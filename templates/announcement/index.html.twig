@@ -1,20 +1,62 @@
+{# templates/announcement/index.html.twig #}
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AnnouncementController!{% endblock %}
+{% block title %}Liste des annonces{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% include 'partials/flash.html.twig' %}
+<div class="container">
+    <h1>Liste des annonces</h1>
+    <div class="row">
+        {% for announcement in announcements %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ announcement.jobTitle }}</h5>
+                    <p class="card-text">{{ announcement.description }}</p>
+                    <p class="card-text"><small class="text-muted">{{ announcement.workPlace }}</small></p>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/Formation Dev Web/évaluations/TRT-Conseil/src/Controller/AnnouncementController.php</code></li>
-        <li>Your template at <code>D:/Formation Dev Web/évaluations/TRT-Conseil/templates/announcement/index.html.twig</code></li>
-    </ul>
+                    {% if is_granted('ROLE_USER') and app.user.candidate is not null %}
+                    
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Postuler
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Voulez-vous bien postuler à cette offre d'emploi ?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Finalement non</button>
+                                    <a href="/create/{{ announcement.id }}/{{ app.user.candidate.id }}" class="btn btn-primary">Oui, ce job est pour moi</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                   <div class="alert alert-warning" role="alert" id="loginAlert{{ announcement.id }}" style="display: none;">
+                        Vous devez vous connecter pour pouvoir postuler.
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="showLoginAlert('{{ announcement.id }}')">Postuler</button>
+                    <script>
+                        function showLoginAlert(announcementId) {
+                            document.getElementById('loginAlert' + announcementId).style.display = 'block';
+                        }
+                    </script>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
+

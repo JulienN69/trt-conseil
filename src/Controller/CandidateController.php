@@ -23,6 +23,12 @@ class CandidateController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // $file = $form->get('curriculumVitae')->getData();
+            // $fileName = $candidate->getId() . '.' . $file->getClientOriginalExtension();
+            // $file->move($this->getParameter('kernel.project_dir') . '/public/images/cv', $fileName);
+            // $candidate->setCurriculumVitae($fileName);
+
             $em->flush();
             $this->addFlash('success', 'votre compte a bien été modifié.');
             return $this->redirectToRoute('app_candidate_{id}', ['id' => $id]);

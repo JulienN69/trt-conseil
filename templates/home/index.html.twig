@@ -10,14 +10,14 @@
         <h1 class="fw-light">Album example</h1>
         <p class="lead text-body-secondary">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
         <p>
-          <a href="#" class="btn btn-primary my-2">Voir les annonces</a>
+          <a href="/announcement" class="btn btn-primary my-2">Voir les annonces</a>
 
           {% if is_granted('ROLE_USER') and app.user.candidate is not null %}
             <a href="/candidate/{{ app.user.candidate.id }}" class="btn btn-warning my-2">Mon compte</a>
           {% endif %}
 
           {% if is_granted('ROLE_USER') and app.user.recruiter is not null %}
-            <a href="/announcement_create" class="btn btn-secondary my-2">Poster une annonce</a>
+            <a href="/announcement_create/{{ app.user.recruiter.id }}" class="btn btn-secondary my-2">Poster une annonce</a>
             <a href="/recruiter/{{ app.user.recruiter.id }}" class="btn btn-warning my-2">Mon compte</a>
           {% endif %}
           
