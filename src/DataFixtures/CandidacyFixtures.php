@@ -11,17 +11,17 @@ class CandidacyFixtures extends Fixture implements DependentFixtureInterface
 {
 
     public function load(ObjectManager $manager): void
-    {
-
-        $u = [1, 3, 5, 7, 9];
-        $recruiterIndex = array_rand($u);
-        $recruiterId = $u[$recruiterIndex];
+    {     
         $e = [];
         for ($i = 0; $i < 20; $i++){
-            $e[]= $i;
+            $e[] = $i;
         }
 
         for ($i = 0; $i < 10; $i++) {
+
+            $u = [1, 3, 5, 7, 9];
+            $recruiterIndex = array_rand($u);
+            $recruiterId = $u[$recruiterIndex];
 
             $candidacy = new Candidacy();
             $candidacy->setCandidate($this->getReference('candidateUser-' . $recruiterId));

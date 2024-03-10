@@ -13,13 +13,15 @@ class AnnouncementFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        $u = [2, 4, 6, 8, 10];
-        $recruiterIndex = array_rand($u);
-        $recruiterId = $u[$recruiterIndex];
+        
 
         $faker = Factory::create('fr_FR');
 
         for ($i = 0; $i < 20; $i++){
+            
+            $u = [2, 4, 6, 8, 10];
+            $recruiterIndex = array_rand($u);
+            $recruiterId = $u[$recruiterIndex];
 
             $announcement = new Announcement();
             $announcement->setRecruiter($this->getReference('recruiterUser-'. $recruiterId));

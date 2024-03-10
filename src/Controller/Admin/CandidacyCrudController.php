@@ -3,10 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Candidacy;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class CandidacyCrudController extends AbstractCrudController
 {
@@ -15,14 +16,28 @@ class CandidacyCrudController extends AbstractCrudController
         return Candidacy::class;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
-        return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-        ];
+        yield IdField::new('id')->hideOnForm()->hideOnIndex();
+        yield AssociationField::new('candidate')
+        ->hideOnForm() 
+        ->setLabel('Candidat')
+        ->formatValue(function ($value, $entity) {
+            return $value->getFirstName() . ' ' . $value->getLastName();
+        });
+        yield AssociationField::new('announcement')
+        ->hideOnForm()
+        ->setLabel('Offre d\'emploi')
+        ->formatValue(function ($value, $entity) {
+            return $value->getJobTitle();
+        });
+        yield BooleanField::new('isValid')->setLabel('Candidature valide ?');
     }
-    */
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setPageTitle('index', 'Liste des candidatures');
+    }
+
 }
