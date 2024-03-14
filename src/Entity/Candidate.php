@@ -7,6 +7,7 @@ use App\Repository\CandidateRepository;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,16 +21,38 @@ class Candidate
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length([
+        'min' => 2,
+        'max' => 50,
+        'minMessage' => 'Le nom doit faire au moins {{ limit }} charactères',
+        'maxMessage' => 'Le nom doit faire au maximum {{ limit }} charactères',
+    ])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length([
+        'min' => 2,
+        'max' => 50,
+        'minMessage' => 'Le prénom doit faire au moins {{ limit }} charactères',
+        'maxMessage' => 'Le prénom doit faire au maximum {{ limit }} charactères',
+    ])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $curriculumVitae = null;
 
     #[Vich\UploadableField(mapping : 'curriculum_vitae', fileNameProperty: 'curriculumVitae')]
-    #[Assert\Image]
+    #[Assert\Image([
+        'mimeTypes' => [
+            'image/jpeg',
+            'image/jpg',
+            'image/pdf',
+            'image/png',
+        ],
+        'mimeTypesMessage' => 'Le format de l\'image n\'est pas autorisée. Les formats autorisés sont {{ types }}',
+        'maxHeight' => 1000,
+        'maxHeightMessage' => 'fichier trop volumineux, le maximum est {{ max_height }} octets'
+    ])]
     private ?File $curriculumVitaeFile = null;
 
     #[ORM\Column(nullable: true)]

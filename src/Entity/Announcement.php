@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnnouncementRepository::class)]
 class Announcement
@@ -17,12 +18,30 @@ class Announcement
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length([
+        'min' => 2,
+        'max' => 100,
+        'minMessage' => 'L\'intitulé doit faire au moins {{ limit }} charactères',
+        'maxMessage' => 'L\'intitulé doit faire au maximum {{ limit }} charactères',
+    ])]
     private ?string $jobTitle = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length([
+        'min' => 5,
+        'max' => 100,
+        'minMessage' => 'L\'adresse doit faire au moins {{ limit }} charactères',
+        'maxMessage' => 'L\'adresse doit faire au maximum {{ limit }} charactères',
+    ])]
     private ?string $workPlace = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length([
+        'min' => 10,
+        'max' => 500,
+        'minMessage' => 'La description doit faire au moins {{ limit }} charactères',
+        'maxMessage' => 'La description doit faire au maximum {{ limit }} charactères',
+    ])]
     private ?string $description = null;
 
     #[ORM\Column]

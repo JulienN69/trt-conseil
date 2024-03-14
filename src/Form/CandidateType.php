@@ -21,7 +21,8 @@ class CandidateType extends AbstractType
             ])
             ->add('curriculumVitaeFile', FileType::class, [
                 'label' => 'Curriculum Vitae',
-                'required' => false
+                'required' => false,
+                'mapped' => false,
             ]);
     }
 

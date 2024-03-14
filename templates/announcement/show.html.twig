@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AnnouncementController!{% endblock %}
+
+{% block body %}
+
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for announcement in announcements %}
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ announcement.jobTitle }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ announcement.workPlace }}</h6>
+            <p class="card-text">{{ announcement.description }}</p>
+            <h6 class="card-subtitle mb-2">Candidature(s) déposée(s) : {{ announcement.candidacies|length }}</h6>
+            <a href="#" class="btn btn-outline-primary" type="button">Modifier</a>
+            <button 
+              class="btn btn-primary" 
+              type="button" 
+              data-bs-toggle="collapse" 
+              data-bs-target="#collapseCandidates{{ loop.index }}"
+              >Voir les candidatures
+            </button>
+            <div class="collapse" id="collapseCandidates{{ loop.index }}">
+              <div class="card card-body">
+
+        {% for candidacy in announcement.candidacies %}
+          <li>{{ candidacy.candidate.firstName }} {{ candidacy.candidate.lastName }}</li>
+        {% endfor %}
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
+

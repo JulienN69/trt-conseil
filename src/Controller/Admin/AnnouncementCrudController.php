@@ -24,6 +24,7 @@ class AnnouncementCrudController extends AbstractCrudController
         yield TextField::new('workPlace')->setLabel('adresse');
         yield TextField::new('description');
         yield BooleanField::new('isValid')->setLabel('annonce valide ?');
+        yield CollectionField::new('candidacies')->setLabel('candidature(s) déposé(es)')->hideOnForm();
     }
 
     public function configureCrud(Crud $crud): Crud

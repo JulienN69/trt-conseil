@@ -4,14 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
+#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cet email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,6 +19,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Email([
+        'message' => 'L\'email "{{ value }}" n\'est pas un email valide.',
+    ])]
+    #[Assert\Length([
+        'min' => 5,
+        'max' => 100,
+        'minMessage' => 'L\'email doit faire au moins {{ limit }} charactères',
+        'maxMessage' => 'L\'email doit faire au maximum {{ limit }} charactères',
+    ])]
     private ?string $email = null;
 
     /**
@@ -38,26 +47,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Recruiter $recruiter = null;
-
-    public function serialize()
-    {
-        return serialize([
-            $this->id,
-            $this->email,
-            $this->password,
-        ]);
-    }
-
-    public function unserialize($serialized)
-    {
-        [
-            $this->id,
-            $this->email,
-            $this->password,
-        ] = unserialize($serialized, ['allowed_classes' => false]);
-        
-        $this->roles = ['ROLE_USER'];
-    }
 
     public function __construct()
     {
@@ -112,18 +101,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
 
         return $this;
     }
-
-    //    // Cette méthode transforme le tableau de rôles en une chaîne JSON
-    // public function serializeRoles(SerializerInterface $serializer): string
-    // {
-    //     return $serializer->serialize($this->roles, 'json');
-    // }
-
-    // // Cette méthode transforme la chaîne JSON en un tableau de rôles
-    // public function deserializeRoles(string $roles, SerializerInterface $serializer): void
-    // {
-    //     $this->roles = $serializer->deserialize($roles, 'array', 'json');
-    // }
 
     /**
      * @see PasswordAuthenticatedUserInterface

@@ -6,6 +6,7 @@ use App\Repository\RecruiterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RecruiterRepository::class)]
 class Recruiter
@@ -16,9 +17,21 @@ class Recruiter
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length([
+        'min' => 2,
+        'max' => 255,
+        'minMessage' => 'Le nom doit faire au moins {{ limit }} charactères',
+        'maxMessage' => 'Le nom doit faire au maximum {{ limit }} charactères',
+    ])]
     private ?string $compagnyName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length([
+        'min' => 5,
+        'max' => 255,
+        'minMessage' => 'L\'adresse doit faire au moins {{ limit }} charactères',
+        'maxMessage' => 'L\'adresse doit faire au maximum {{ limit }} charactères',
+    ])]
     private ?string $adress = null;
 
     #[ORM\Column]

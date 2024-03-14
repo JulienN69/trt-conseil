@@ -29,8 +29,9 @@ class CandidacyController extends AbstractController
         CandidateRepository $candidateRepository,
         int $announcementId,
         int $candidateId
-    ): Response {
-        // Récupérer l'annonce et le candidat à partir de leurs identifiants
+    ): Response 
+    {
+
         $announcement = $announcementRepository->find($announcementId);
         $candidate = $candidateRepository->find($candidateId);
 

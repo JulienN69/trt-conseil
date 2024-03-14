@@ -20,6 +20,9 @@
                     <a type="button" class="btn btn-outline-primary me-2" href="/login">Se connecter</a>
                     <a type="button" class="btn btn-primary" href="/register">s'inscrire</a>
                 {% endif %}
+                {% if is_granted('ROLE_MODERATOR') %}
+                    <a href="/admin" class="btn btn-primary my-2">Admin</a>
+                {% endif %}
                 {% if is_granted('ROLE_USER') %}
                     <a href="/logout" class="btn btn-primary my-2">Se déconnecter</a>
                 {% endif %}

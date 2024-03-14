@@ -15,13 +15,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AnnouncementController extends AbstractController
 {
     #[Route('/announcement', name: 'app_announcement')]
-    public function index(AnnouncementRepository $announcementRepo): Response
+    public function index(AnnouncementRepository $announcementRepo, Request $request): Response
     {
-        $announcements = $announcementRepo->findAll();
+        $page = $request->query->getInt('page', 1);
+        $limit = 6;
+        $announcements = $announcementRepo->paginateAnnouncement($page, $limit);
+        $maxPage = ceil($announcements->getTotalItemCount()/ $limit);
+
+        // $announcements = $announcementRepo->findAll();
 
         return $this->render('announcement/index.html.twig', [
             'controller_name' => 'AnnouncementController',
-            'announcements' => $announcements
+            'announcements' => $announcements,
+            'maxPage' => $maxPage,
+            'page' => $page
         ]);
     }
 
@@ -46,5 +53,15 @@ class AnnouncementController extends AbstractController
             'AnnouncementForm' => $form,
         ]);
     }
+    
+    #[Route('/announcement_show/{id}', name: 'app_announcement_show_{id}')]
+    public function show(int $id, RecruiterRepository $recruiterRepo, AnnouncementRepository $announcementRepo): Response
+    {
 
+        $announcements = $announcementRepo->findAllAnnoucementByRecruiterId($id, $recruiterRepo);
+
+        return $this->render('announcement/show.html.twig', [
+            'announcements' => $announcements,
+        ]);
+    }
 }

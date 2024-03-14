@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Announcement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Announcement>
@@ -16,9 +18,29 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AnnouncementRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Announcement::class);
+    }
+
+    public function paginateAnnouncement(int $page, int $limit): PaginationInterface
+    {
+        return $this->paginator->paginate(
+            $this->createQueryBuilder('r'),
+            $page,
+            $limit
+        );
+    }
+
+    public function findAllAnnoucementByRecruiterId(int $id, RecruiterRepository $recruiterRepo){
+
+        $recruiter = $recruiterRepo->find($id);
+    
+        return $this->createQueryBuilder('a')
+            ->where('a.recruiter = :recruiter')
+            ->setParameter('recruiter', $recruiter)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

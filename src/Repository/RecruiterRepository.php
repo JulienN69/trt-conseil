@@ -21,6 +21,7 @@ class RecruiterRepository extends ServiceEntityRepository
         parent::__construct($registry, Recruiter::class);
     }
 
+
 //    /**
 //     * @return Recruiter[] Returns an array of Recruiter objects
 //     */
