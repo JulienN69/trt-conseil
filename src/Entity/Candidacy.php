@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\CandidacyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CandidacyRepository;
 
 #[ORM\Entity(repositoryClass: CandidacyRepository::class)]
 class Candidacy
@@ -40,6 +40,9 @@ class Candidacy
 
     public function setIsValid(bool $isValid): static
     {
+        if ($this->isValid === false && $isValid === true) {
+        }
+
         $this->isValid = $isValid;
 
         return $this;

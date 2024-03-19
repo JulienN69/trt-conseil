@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Announcement;
 use App\Form\AnnouncementType;
-use App\Repository\AnnouncementRepository;
 use App\Repository\RecruiterRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AnnouncementRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -46,6 +46,7 @@ class AnnouncementController extends AbstractController
             $em->persist($Announcement);
             $em->flush();
             $this->addFlash('success', 'annonce créée, elle sera affichée après validation par nos modérateurs.');
+
             return $this->redirectToRoute('app_announcement_create_{id}', ['id' => $id]);
         }
 
