@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Event\NotifyEvent;
 use App\Entity\Announcement;
 use App\Form\AnnouncementType;
 use App\Repository\RecruiterRepository;
@@ -10,10 +11,17 @@ use App\Repository\AnnouncementRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 
 class AnnouncementController extends AbstractController
 {
+    public function __construct(private EventDispatcherInterface $dispatcher)
+    {       
+    }
+
     #[Route('/announcement', name: 'app_announcement')]
     public function index(AnnouncementRepository $announcementRepo, Request $request): Response
     {
@@ -34,7 +42,11 @@ class AnnouncementController extends AbstractController
 
 
     #[Route('/announcement_create/{id}', name: 'app_announcement_create_{id}')]
-    public function create(Request $request, EntityManagerInterface $em, int $id, RecruiterRepository $recruiterRepo): Response
+    public function create(
+        Request $request, 
+        EntityManagerInterface $em, 
+        int $id, 
+        RecruiterRepository $recruiterRepo): Response
     {
         $recruiter = $recruiterRepo->find($id);
         $Announcement = new Announcement();
@@ -45,7 +57,9 @@ class AnnouncementController extends AbstractController
             $Announcement->setRecruiter($recruiter);
             $em->persist($Announcement);
             $em->flush();
-            $this->addFlash('success', 'annonce créée, elle sera affichée après validation par nos modérateurs.');
+
+            $this->dispatcher->dispatch(new NotifyEvent($Announcement));
+            // $this->addFlash('success', 'annonce créée, elle sera affichée après validation par nos modérateurs.');
 
             return $this->redirectToRoute('app_announcement_create_{id}', ['id' => $id]);
         }

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+
 class RecruiterController extends AbstractController
 {
     #[Route('/recruiter/{id}', name: 'app_recruiter_{id}')]

@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class EmailSender
@@ -28,6 +27,3 @@ class EmailSender
 
     }
 }
-
-
-// ->html('<p>See Twig integration for better HTML integration!</p>');
