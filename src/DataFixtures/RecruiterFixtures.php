@@ -10,10 +10,8 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class RecruiterFixtures extends Fixture implements DependentFixtureInterface
 {
-
     public function load(ObjectManager $manager): void
     {
-
         $faker = Factory::create('fr_FR');
 
         for ($i = 1; $i < 11; $i++) {
@@ -28,13 +26,9 @@ class RecruiterFixtures extends Fixture implements DependentFixtureInterface
     
                 $manager->persist($newRecruiter);
                 $this->addReference('recruiterUser-' . $i, $newRecruiter);
-
             }        
-
         }
-
         $manager->flush();
-
     }
 
     public function getDependencies()

@@ -6,6 +6,7 @@ use Exception;
 use App\Entity\Candidate;
 use App\Form\CandidateType;
 use App\Security\Voter\CandidateVoter;
+use App\Security\Voter\RecruiterVoter;
 use App\Repository\CandidateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;

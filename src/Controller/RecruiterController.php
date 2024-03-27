@@ -4,17 +4,20 @@ namespace App\Controller;
 
 use App\Entity\Recruiter;
 use App\Form\RecruiterType;
+use App\Security\Voter\RecruiterVoter;
 use App\Repository\RecruiterRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 class RecruiterController extends AbstractController
 {
     #[Route('/recruiter/{id}', name: 'app_recruiter_{id}')]
+    #[IsGranted(RecruiterVoter::EDIT, subject: 'recruiter')]
     public function index(RecruiterRepository $repository, Request $request, Recruiter $recruiter, EntityManagerInterface $em): Response
     {
         $id = $request->get('id');

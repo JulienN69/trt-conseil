@@ -20,6 +20,7 @@ class RecruiterCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id')->hideOnForm()->hideOnIndex();
+        yield TextField::new('user.email')->setLabel('Email');
         yield TextField::new('compagnyName')->setLabel('Entreprise');
         yield TextField::new('adress')->setLabel('Adresse');
         yield BooleanField::new('isValid')->setLabel('Entreprise valide ?');

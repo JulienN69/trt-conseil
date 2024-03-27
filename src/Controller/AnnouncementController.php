@@ -5,16 +5,16 @@ namespace App\Controller;
 use App\Event\NotifyEvent;
 use App\Entity\Announcement;
 use App\Form\AnnouncementType;
+use App\Security\Voter\RecruiterVoter;
 use App\Repository\RecruiterRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AnnouncementRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AnnouncementController extends AbstractController
 {
@@ -42,6 +42,7 @@ class AnnouncementController extends AbstractController
 
 
     #[Route('/announcement_create/{id}', name: 'app_announcement_create_{id}')]
+    #[IsGranted(RecruiterVoter::EDIT, subject: 'recruiter')]
     public function create(
         Request $request, 
         EntityManagerInterface $em, 

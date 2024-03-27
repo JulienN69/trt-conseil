@@ -22,6 +22,7 @@ class CandidateCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield IdField::new('id')->hideOnForm()->hideOnIndex();
+        yield TextField::new('user.email')->setLabel('Email');
         yield TextField::new('firstName')->setLabel('Prénom');
         yield TextField::new('lastName')->setLabel('Nom');
         yield BooleanField::new('isValid')->setLabel('Compte valide ?');

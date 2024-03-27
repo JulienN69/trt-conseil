@@ -7,6 +7,7 @@ use App\Entity\Candidacy;
 use App\Entity\Candidate;
 use App\Entity\Recruiter;
 use App\Entity\Announcement;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -19,6 +20,13 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         return $this->render('admin/dashboard.html.twig');
+    }
+
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
     }
 
     public function configureDashboard(): Dashboard
@@ -34,6 +42,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Candidats', 'fa-solid fa-user', Candidate::class);
         yield MenuItem::linkToCrud('Recruteurs', 'fa-solid fa-building', Recruiter::class);
         yield MenuItem::linkToCrud('Offre d\'emploi', 'fa-solid fa-scroll', Announcement::class);
-        yield MenuItem::linkToCrud('utilisateur', 'fa-solid fa-user', User::class);
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            yield MenuItem::linkToCrud('utilisateur', 'fa-solid fa-user', User::class);
+        }
     }
 }
