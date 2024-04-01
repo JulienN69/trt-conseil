@@ -4,29 +4,31 @@ namespace App\EventSubscriber;
 
 use App\Event\NotifyEvent;
 use Symfony\Component\Notifier\NotifierInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class NotifySubscriber implements EventSubscriberInterface
 {   
     public function __construct(private NotifierInterface $notifier) 
     {
-
     }
 
     public function onNotifyEvent(NotifyEvent $event): void
     {
         $jobName = $event->getJobName();
         $content = 'Votre annonce ' . $jobName . ' a bien été créée, elle sera affiché après validation par nos équipes.';
-
-
         $notification = (new Notification($content, ['browser']));
-
         
         $this->notifier->send($notification);
     }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            NotifyEvent::class => 'onNotifyEvent',
+        ];
+    }
+}
 
     // private $requestStack;
     
@@ -44,12 +46,3 @@ class NotifySubscriber implements EventSubscriberInterface
     //     }
 
     // }
-
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            NotifyEvent::class => 'onNotifyEvent',
-        ];
-    }
-}
-

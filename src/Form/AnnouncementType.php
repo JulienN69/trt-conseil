@@ -22,10 +22,6 @@ class AnnouncementType extends AbstractType
                 'label' => 'Lieu'
             ])
             ->add('description');
-            // ->add('recruiter', EntityType::class, [
-            //     'class' => Recruiter::class,
-            //     'choice_label' => 'id',
-            // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

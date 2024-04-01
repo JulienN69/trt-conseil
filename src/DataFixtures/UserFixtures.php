@@ -19,7 +19,7 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-
+        // réation des recruteurs et des candidats
         for ($i = 1; $i < 11; $i++) {
             $user = new User();
             $userType = $i % 2 === 0 ? 'recruiter' : 'candidate'; 
@@ -32,10 +32,19 @@ class UserFixtures extends Fixture
             $user->setRoles(['ROLE_USER']);
 
             $manager->persist($user);
-            $this->addReference($userType . '-' . $i, $user);
-            
+            $this->addReference($userType . '-' . $i, $user);          
         }
 
+        //création d'un admin
+        $admin = new User();
+        $admin->setEmail('administrator@gmail.com');
+        $adminPassword = $this->hasher->hashPassword($admin, 'administrator');
+        $admin->setPassword($adminPassword);
+        $admin->setRoles(['ROLE_ADMIN']);
+
+        $manager->persist($admin);
+
+        //flush
         $manager->flush();
 
     }

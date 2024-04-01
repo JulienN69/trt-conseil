@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Recruiter;
 use App\Event\NotifyEvent;
 use App\Entity\Announcement;
 use App\Form\AnnouncementType;
@@ -12,9 +13,9 @@ use App\Repository\AnnouncementRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AnnouncementController extends AbstractController
 {
@@ -30,8 +31,6 @@ class AnnouncementController extends AbstractController
         $announcements = $announcementRepo->paginateAnnouncement($page, $limit);
         $maxPage = ceil($announcements->getTotalItemCount()/ $limit);
 
-        // $announcements = $announcementRepo->findAll();
-
         return $this->render('announcement/index.html.twig', [
             'controller_name' => 'AnnouncementController',
             'announcements' => $announcements,
@@ -43,28 +42,23 @@ class AnnouncementController extends AbstractController
 
     #[Route('/announcement_create/{id}', name: 'app_announcement_create_{id}')]
     #[IsGranted(RecruiterVoter::EDIT, subject: 'recruiter')]
-    public function create(
-        Request $request, 
-        EntityManagerInterface $em, 
-        int $id, 
-        RecruiterRepository $recruiterRepo): Response
+    public function create(Recruiter $recruiter, Request $request, EntityManagerInterface $em, int $id, RecruiterRepository $recruiterRepo): Response
     {
+        
         $recruiter = $recruiterRepo->find($id);
         $Announcement = new Announcement();
         $form = $this->createForm(AnnouncementType::class, $Announcement);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $Announcement->setRecruiter($recruiter);
             $em->persist($Announcement);
             $em->flush();
 
             $this->dispatcher->dispatch(new NotifyEvent($Announcement));
-            // $this->addFlash('success', 'annonce créée, elle sera affichée après validation par nos modérateurs.');
-
+            
             return $this->redirectToRoute('app_announcement_create_{id}', ['id' => $id]);
         }
-
         return $this->render('announcement/create.html.twig', [
             'AnnouncementForm' => $form,
         ]);
