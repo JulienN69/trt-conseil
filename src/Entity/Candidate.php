@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\EntityIdTrait;
 use App\Repository\CandidateRepository;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
@@ -15,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Vich\Uploadable]
 class Candidate
 {
+    // use EntityIdTrait;
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

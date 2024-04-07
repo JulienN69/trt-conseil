@@ -15,11 +15,9 @@ class SmokeTest extends WebTestCase
     {
         $client = self::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
-
-        // retrieve the test user
+        
         $testUser = $userRepository->findOneByEmail('recruiter2@gmail.com');
 
-        // simulate $testUser being logged in
         $client->loginUser($testUser);
 
         $client->request('GET', $url);
@@ -34,7 +32,7 @@ class SmokeTest extends WebTestCase
         yield ['/candidacy'];
         yield ['/register'];
         yield ['/login'];
-        yield ['/recruiter/1'];
+        yield ['/recruiter/6'];
         
     }
 }

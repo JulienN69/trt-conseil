@@ -24,6 +24,5 @@ class EmailSender
         } catch (\Exception $e) {
             echo 'Une erreur est survenue lors de l\'envoi de l\'e-mail : ' . $e->getMessage();
         }
-
     }
 }

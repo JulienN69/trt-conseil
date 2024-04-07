@@ -25,11 +25,9 @@ class RecruiterVoter extends Voter
         if (!$user instanceof User) {
             return false;
         }
-
         if (!$subject instanceof Recruiter){
             return false;
         }
-
         switch ($attribute) {
             case self::EDIT:
                 return $subject->getUser()->getId() === $user->getId();
@@ -39,7 +37,6 @@ class RecruiterVoter extends Voter
                 // return true or false
                 break;
         }
-
         return false;
     }
 }

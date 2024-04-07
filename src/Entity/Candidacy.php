@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\EntityIdTrait;
 use App\Repository\CandidacyRepository;
 
 #[ORM\Entity(repositoryClass: CandidacyRepository::class)]
 class Candidacy
 {
+    // use EntityIdTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

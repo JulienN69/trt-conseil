@@ -25,7 +25,7 @@ final class ValidationListener
         $entity = $event->getEntityInstance();
 
         if (!$entity instanceof Candidacy) {
-            return; // Ne rien faire si l'entité n'est pas une Candidacy
+            return;
         }
 
         $isValid = $entity->isIsValid();
