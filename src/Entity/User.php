@@ -16,11 +16,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use EntityIdTrait;
 
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column]
-    // private ?int $id = null;
-
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email([
         'message' => 'L\'email "{{ value }}" n\'est pas un email valide.',
@@ -55,11 +50,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->roles = ['ROLE_USER'];
     }
-
-    // public function getId(): ?int
-    // {
-    //     return $this->id;
-    // }
 
     public function getEmail(): ?string
     {

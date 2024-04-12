@@ -12,12 +12,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: RecruiterRepository::class)]
 class Recruiter
 {
-    // use EntityIdTrait;
+    use EntityIdTrait;
 
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    // #[ORM\Id]
+    // #[ORM\GeneratedValue]
+    // #[ORM\Column]
+    // private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length([
@@ -54,10 +54,10 @@ class Recruiter
         $this->announcements = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    // public function getId(): ?int
+    // {
+    //     return $this->id;
+    // }
 
     public function getCompagnyName(): ?string
     {
