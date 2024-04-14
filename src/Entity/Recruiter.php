@@ -14,11 +14,6 @@ class Recruiter
 {
     use EntityIdTrait;
 
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column]
-    // private ?int $id = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length([
         'min' => 2,
@@ -53,11 +48,6 @@ class Recruiter
         $this->isValid = false;
         $this->announcements = new ArrayCollection();
     }
-
-    // public function getId(): ?int
-    // {
-    //     return $this->id;
-    // }
 
     public function getCompagnyName(): ?string
     {

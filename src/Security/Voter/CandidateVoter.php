@@ -32,6 +32,7 @@ class CandidateVoter extends Voter
 
         switch ($attribute) {
             case self::EDIT:
+                // dd($user->getId());
                 return $subject->getUser()->getId() === $user->getId();
                 break;
             case self::VIEW:

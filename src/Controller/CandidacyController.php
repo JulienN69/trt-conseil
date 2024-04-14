@@ -25,7 +25,7 @@ class CandidacyController extends AbstractController
     }
 
     #[Route('/create/{announcementId}/{candidateId}', name: 'app_candidacy_create')]
-    #[IsGranted(CandidateVoter::EDIT, subject: 'candidate')]
+    // #[IsGranted(CandidateVoter::EDIT, subject: 'candidate')]
     public function create(
         CandidacyRepository $candidacyRepository,
         AnnouncementRepository $announcementRepository,

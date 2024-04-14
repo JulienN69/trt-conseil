@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Candidate;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
@@ -23,6 +24,18 @@ class CandidateType extends AbstractType
                 'label' => 'Curriculum Vitae',
                 'required' => false,
                 'mapped' => false,
+                'constraints' => [
+                    new File([
+                        'mimeTypes' => [
+                            'pdf',
+                            'jpeg',
+                            'png',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger un fichier PDF, JPG ou PNG valide.',
+                        'maxSize' => '500M',
+                        'maxSizeMessage' => 'La taille maximale autorisée est de 500 Mo.',
+                    ])
+                ],
             ]);
     }
 
